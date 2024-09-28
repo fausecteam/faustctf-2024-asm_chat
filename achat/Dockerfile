@@ -1,0 +1,19 @@
+FROM alpine:3.20.2 as build
+
+RUN apk add --update build-base linux-headers
+
+RUN mkdir -p /build/bin
+COPY src /build/src
+COPY tools /build/tools
+COPY Makefile /build/
+
+WORKDIR /build
+
+RUN make
+
+FROM alpine:3.20.2
+
+COPY --from=build /build/bin/achat /build/bin/
+COPY --from=build /build/bin/create_chat /build/bin/
+
+ENTRYPOINT ["/build/bin/achat"]

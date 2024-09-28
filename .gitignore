@@ -1,0 +1,5 @@
+/achat/bin
+.venv
+ctf-gameserver
+__pycache__
+

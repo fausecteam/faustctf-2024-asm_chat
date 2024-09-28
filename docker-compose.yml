@@ -1,0 +1,29 @@
+version: "2.2"
+# ipv6 is not supported in version 3
+
+services:
+  achat_deps:
+    scale: 0
+    image: faust.cs.fau.de:5000/achat
+    build: achat
+  achat:
+    restart: unless-stopped
+    image: faust.cs.fau.de:5000/achat
+    init: true
+    cap_add:
+      # Required to set files/directories
+      # as append only
+      - LINUX_IMMUTABLE
+    volumes:
+      - ./data/:/.achat_data/
+    ports:
+      - "1337:1337/tcp"
+
+
+networks:
+  default:
+    enable_ipv6: true
+    ipam:
+        driver: default
+        config:
+            - subnet: "fd42:d0ce:4444::/64"
